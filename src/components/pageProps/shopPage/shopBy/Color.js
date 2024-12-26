@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import NavTitle from "./NavTitle";
 
-const Color = () => {
+const Color = ({ onColorClick }) => {
   const [showColors, setShowColors] = useState(true);
   const colors = [
     {
@@ -32,6 +32,10 @@ const Color = () => {
     },
   ];
 
+  const handleColorClick = (color) => {
+    onColorClick(color.title);
+  };
+
   return (
     <div>
       <div
@@ -50,7 +54,8 @@ const Color = () => {
             {colors.map((item) => (
               <li
                 key={item._id}
-                className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center gap-2"
+                className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center gap-2 cursor-pointer"
+                onClick={() => handleColorClick(item)} // Handle color selection
               >
                 <span
                   style={{ background: item.base }}

@@ -1,54 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Heading from "../Products/Heading";
 import Product from "../Products/Product";
-import {
-  spfOne,
-  spfTwo,
-  spfThree,
-  spfFour,
-} from "../../../assets/images/index";
+import axios from "axios";
 
 const SpecialOffers = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch special offer products from the backend
+    const fetchSpecialOffers = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7025/api/Store/special-offers"
+        );
+        setProducts(response.data); // Update state with fetched data
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching special offer items:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchSpecialOffers();
+  }, []); // Empty dependency array ensures the request is made once when the component is mounted
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!products || products.length === 0) {
+    return <div>No special offer items found.</div>;
+  }
+
   return (
     <div className="w-full pb-20">
       <Heading heading="Special Offers" />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lgl:grid-cols-3 xl:grid-cols-4 gap-10">
-        <Product
-          _id="1101"
-          img={spfOne}
-          productName="Cap for Boys"
-          price="35.00"
-          color="Blank and White"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1102"
-          img={spfTwo}
-          productName="Tea Table"
-          price="180.00"
-          color="Gray"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1103"
-          img={spfThree}
-          productName="Headphones"
-          price="25.00"
-          color="Mixed"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1104"
-          img={spfFour}
-          productName="Sun glasses"
-          price="220.00"
-          color="Black"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
+        {products.map((product) => (
+          <Product
+            key={product.id}
+            _id={product.id}
+            imageUrl={`https://localhost:7025${product.imageUrl}`}
+            name={product.name}
+            price={product.price}
+            color={product.color}
+            badge={true}
+            des={product.description}
+          />
+        ))}
       </div>
     </div>
   );

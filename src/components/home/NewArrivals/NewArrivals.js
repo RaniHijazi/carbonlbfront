@@ -1,19 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Slider from "react-slick";
 import Heading from "../Products/Heading";
 import Product from "../Products/Product";
-import {
-  newArrOne,
-  newArrTwo,
-  newArrThree,
-  newArrFour,
-} from "../../../assets/images/index";
 import SampleNextArrow from "./SampleNextArrow";
 import SamplePrevArrow from "./SamplePrevArrow";
+import axios from "axios";
 
 const NewArrivals = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Ensure this function is called only once
+    const fetchNewArrivals = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7025/api/Store/new-arrivals"
+        );
+        setProducts(response.data); // Update state with fetched data
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching new arrivals:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchNewArrivals();
+  }, []); // Empty dependency array ensures it runs once
+
   const settings = {
-    infinite: true,
+    infinite: false, // Disable infinite looping
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
@@ -25,7 +41,7 @@ const NewArrivals = () => {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
-          infinite: true,
+          infinite: true, // You can keep this for smaller screens if you need it
         },
       },
       {
@@ -33,7 +49,7 @@ const NewArrivals = () => {
         settings: {
           slidesToShow: 2,
           slidesToScroll: 2,
-          infinite: true,
+          infinite: true, // Same here, adjust as needed
         },
       },
       {
@@ -41,70 +57,37 @@ const NewArrivals = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          infinite: true,
+          infinite: true, // You can adjust this for mobile screens
         },
       },
     ],
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!products || products.length === 0) {
+    return <div>No new arrivals found.</div>;
+  }
+
   return (
     <div className="w-full pb-16">
       <Heading heading="New Arrivals" />
       <Slider {...settings}>
-        <div className="px-2">
-          <Product
-            _id="100001"
-            img={newArrOne}
-            productName="Round Table Clock"
-            price="44.00"
-            color="Black"
-            badge={true}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100002"
-            img={newArrTwo}
-            productName="Smart Watch"
-            price="250.00"
-            color="Black"
-            badge={true}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100003"
-            img={newArrThree}
-            productName="cloth Basket"
-            price="80.00"
-            color="Mixed"
-            badge={true}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100004"
-            img={newArrFour}
-            productName="Funny toys for babies"
-            price="60.00"
-            color="Mixed"
-            badge={false}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
-        <div className="px-2">
-          <Product
-            _id="100005"
-            img={newArrTwo}
-            productName="Funny toys for babies"
-            price="60.00"
-            color="Mixed"
-            badge={false}
-            des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-          />
-        </div>
+        {products.map((product) => (
+          <div key={product.id} className="px-2">
+            <Product
+              _id={product.id}
+              imageUrl={`https://localhost:7025${product.imageUrl}`}
+              name={product.name}
+              price={product.price}
+              color={product.color}
+              badge={true}
+              des={product.description}
+            />
+          </div>
+        ))}
       </Slider>
     </div>
   );

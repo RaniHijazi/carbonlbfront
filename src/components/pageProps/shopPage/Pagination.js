@@ -1,23 +1,21 @@
 import React, { useState } from "react";
 import ReactPaginate from "react-paginate";
 import Product from "../../home/Products/Product";
-import { paginationItems } from "../../../constants";
 
-const items = paginationItems;
 function Items({ currentItems }) {
   return (
     <>
       {currentItems &&
         currentItems.map((item) => (
-          <div key={item._id} className="w-full">
+          <div key={item.id} className="w-full">
             <Product
-              _id={item._id}
-              img={item.img}
-              productName={item.productName}
+              _id={item.id}
+              imageUrl={`https://localhost:7025${item.imageUrl}`}
+              name={item.name}
               price={item.price}
               color={item.color}
-              badge={item.badge}
-              des={item.des}
+              badge={true}
+              description={item.description}
             />
           </div>
         ))}
@@ -25,35 +23,30 @@ function Items({ currentItems }) {
   );
 }
 
-const Pagination = ({ itemsPerPage }) => {
-  // Here we use item offsets; we could also use page offsets
-  // following the API or data you're working with.
-  const [itemOffset, setItemOffset] = useState(0);
-  const [itemStart, setItemStart] = useState(1);
+const Pagination = ({ items, itemsPerPage }) => {
+  const [itemOffset, setItemOffset] = useState(0); // Offset to track current page start
+  const [itemStart, setItemStart] = useState(1); // Start item number for display
 
-  // Simulate fetching items from another resources.
-  // (This could be items from props; or items loaded in a local state
-  // from an API endpoint with useEffect and useState)
+  // Calculate the current items to display
   const endOffset = itemOffset + itemsPerPage;
-  //   console.log(`Loading items from ${itemOffset} to ${endOffset}`);
-  const currentItems = items.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(items.length / itemsPerPage);
+  const currentItems = items.slice(itemOffset, endOffset); // Get the items for the current page
+  const pageCount = Math.ceil(items.length / itemsPerPage); // Total number of pages
 
-  // Invoke when user click to request another page.
+  // Handle page change
   const handlePageClick = (event) => {
     const newOffset = (event.selected * itemsPerPage) % items.length;
-    setItemOffset(newOffset);
-    // console.log(
-    //   `User requested page number ${event.selected}, which is offset ${newOffset},`
-    // );
-    setItemStart(newOffset);
+    setItemOffset(newOffset); // Update offset for the new page
+    setItemStart(newOffset + 1); // Update the start item number
   };
 
   return (
     <div>
+      {/* Render current items */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-10 mdl:gap-4 lg:gap-10">
         <Items currentItems={currentItems} />
       </div>
+
+      {/* Pagination controls */}
       <div className="flex flex-col mdl:flex-row justify-center mdl:justify-between items-center">
         <ReactPaginate
           nextLabel=""
@@ -68,8 +61,9 @@ const Pagination = ({ itemsPerPage }) => {
           activeClassName="bg-black text-white"
         />
 
+        {/* Display pagination range */}
         <p className="text-base font-normal text-lightText">
-          Products from {itemStart === 0 ? 1 : itemStart} to {endOffset} of{" "}
+          Products from {itemStart} to {Math.min(endOffset, items.length)} of{" "}
           {items.length}
         </p>
       </div>

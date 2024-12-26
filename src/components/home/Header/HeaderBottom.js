@@ -5,38 +5,57 @@ import { FaSearch, FaUser, FaCaretDown, FaShoppingCart } from "react-icons/fa";
 import Flex from "../../designLayouts/Flex";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { paginationItems } from "../../../constants";
+import axios from "axios";
 
 const HeaderBottom = () => {
   const products = useSelector((state) => state.orebiReducer.products);
   const [show, setShow] = useState(false);
   const [showUser, setShowUser] = useState(false);
-  const navigate = useNavigate();
-  const ref = useRef();
-  useEffect(() => {
-    document.body.addEventListener("click", (e) => {
-      if (ref.current.contains(e.target)) {
-        setShow(true);
-      } else {
-        setShow(false);
-      }
-    });
-  }, [show, ref]);
-
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [showSearchBar, setShowSearchBar] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  const navigate = useNavigate();
+  const ref = useRef();
 
+  // Fetch products from API
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(
+        "https://localhost:7025/api/Store/items"
+      );
+      setAllProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  // Handle search input
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
 
+  // Update filtered products whenever the search query or product list changes
   useEffect(() => {
-    const filtered = paginationItems.filter((item) =>
-      item.productName.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = allProducts.filter(
+      (item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.categoryName?.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredProducts(filtered);
-  }, [searchQuery]);
+  }, [searchQuery, allProducts]);
+
+  // Close the menu when clicking outside
+  useEffect(() => {
+    document.body.addEventListener("click", (e) => {
+      if (ref.current && !ref.current.contains(e.target)) {
+        setShow(false);
+      }
+    });
+  }, []);
 
   return (
     <div className="w-full bg-[#F5F5F3] relative">
@@ -49,34 +68,6 @@ const HeaderBottom = () => {
           >
             <HiOutlineMenuAlt4 className="w-5 h-5" />
             <p className="text-[14px] font-normal">Shop by Category</p>
-
-            {show && (
-              <motion.ul
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="absolute top-36 z-50 bg-primeColor w-auto text-[#767676] h-auto p-4 pb-6"
-              >
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Accessories
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Furniture
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Electronics
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Clothes
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Bags
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Home appliances
-                </li>
-              </motion.ul>
-            )}
           </div>
           <div className="relative w-full lg:w-[600px] h-[50px] text-base text-primeColor bg-white flex items-center gap-2 justify-between px-6 rounded-xl">
             <input
@@ -91,42 +82,52 @@ const HeaderBottom = () => {
               <div
                 className={`w-full mx-auto h-96 bg-white top-16 absolute left-0 z-50 overflow-y-scroll shadow-2xl scrollbar-hide cursor-pointer`}
               >
-                {searchQuery &&
-                  filteredProducts.map((item) => (
-                    <div
-                      onClick={() =>
-                        navigate(
-                          `/product/${item.productName
-                            .toLowerCase()
-                            .split(" ")
-                            .join("")}`,
-                          {
-                            state: {
-                              item: item,
-                            },
-                          }
-                        ) &
-                        setShowSearchBar(true) &
-                        setSearchQuery("")
-                      }
-                      key={item._id}
-                      className="max-w-[600px] h-28 bg-gray-100 mb-3 flex items-center gap-3"
-                    >
-                      <img className="w-24" src={item.img} alt="productImg" />
-                      <div className="flex flex-col gap-1">
-                        <p className="font-semibold text-lg">
-                          {item.productName}
-                        </p>
-                        <p className="text-xs">{item.des}</p>
-                        <p className="text-sm">
-                          Price:{" "}
-                          <span className="text-primeColor font-semibold">
-                            ${item.price}
-                          </span>
-                        </p>
-                      </div>
+                {filteredProducts.map((item) => (
+                  <div
+                    onClick={() => {
+                      // Modify the imageUrl before navigating
+                      const updatedItem = {
+                        ...item,
+                        imageUrl: `https://localhost:7025${item.imageUrl}`,
+                      };
+
+                      console.log("Updated Product clicked:", updatedItem); // Log the updated item
+
+                      // Navigate with the updated item
+                      navigate(
+                        `/product/${item.name
+                          .toLowerCase()
+                          .replace(/\s+/g, "-")}`,
+                        {
+                          state: { item: updatedItem },
+                        }
+                      );
+
+                      setSearchQuery(""); // Clear the search query after clicking
+                    }}
+                    key={item.id}
+                    className="max-w-[600px] h-28 bg-gray-100 mb-3 flex items-center gap-3"
+                  >
+                    <img
+                      className="w-24"
+                      src={`https://localhost:7025${item.imageUrl}`}
+                      alt={item.name}
+                    />
+                    <div className="flex flex-col gap-1">
+                      <p className="font-semibold text-lg">{item.name}</p>
+                      <p className="text-xs">{item.description}</p>
+                      <p className="text-sm">
+                        Price:{" "}
+                        <span className="text-primeColor font-semibold">
+                          ${item.price}
+                        </span>
+                      </p>
+                      <p className="text-xs text-gray-600">
+                        Category: {item.categoryName}
+                      </p>
                     </div>
-                  ))}
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -152,12 +153,6 @@ const HeaderBottom = () => {
                     Sign Up
                   </li>
                 </Link>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400 hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Profile
-                </li>
-                <li className="text-gray-400 px-4 py-1 border-b-[1px] border-b-gray-400  hover:border-b-white hover:text-white duration-300 cursor-pointer">
-                  Others
-                </li>
               </motion.ul>
             )}
             <Link to="/cart">

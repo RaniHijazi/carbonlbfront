@@ -1,54 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Heading from "../Products/Heading";
 import Product from "../Products/Product";
-import {
-  bestSellerOne,
-  bestSellerTwo,
-  bestSellerThree,
-  bestSellerFour,
-} from "../../../assets/images/index";
+import axios from "axios";
 
 const BestSellers = () => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch bestseller products from the backend
+    const fetchBestSellers = async () => {
+      try {
+        const response = await axios.get(
+          "https://localhost:7025/api/Store/bestsellers"
+        );
+        setProducts(response.data); // Update state with fetched data
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching bestseller items:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchBestSellers();
+  }, []); // Empty dependency array ensures the request is made once when the component is mounted
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!products || products.length === 0) {
+    return <div>No bestseller items found.</div>;
+  }
+
   return (
     <div className="w-full pb-20">
       <Heading heading="Our Bestsellers" />
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lgl:grid-cols-3 xl:grid-cols-4 gap-10">
-        <Product
-          _id="1011"
-          img={bestSellerOne}
-          productName="Flower Base"
-          price="35.00"
-          color="Blank and White"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1012"
-          img={bestSellerTwo}
-          productName="New Backpack"
-          price="180.00"
-          color="Gray"
-          badge={false}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1013"
-          img={bestSellerThree}
-          productName="Household materials"
-          price="25.00"
-          color="Mixed"
-          badge={true}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
-        <Product
-          _id="1014"
-          img={bestSellerFour}
-          productName="Travel Bag"
-          price="220.00"
-          color="Black"
-          badge={false}
-          des="Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic excepturi quibusdam odio deleniti reprehenderit facilis."
-        />
+        {products.map((product) => (
+          <Product
+            key={product.id}
+            _id={product.id}
+            imageUrl={`https://localhost:7025${product.imageUrl}`}
+            name={product.name}
+            price={product.price}
+            color={product.color}
+            badge={true}
+            des={product.description}
+          />
+        ))}
       </div>
     </div>
   );

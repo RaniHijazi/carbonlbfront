@@ -1,27 +1,27 @@
 import React from "react";
 import NavTitle from "./NavTitle";
 
-const Price = () => {
+const Price = ({ onPriceClick }) => {
   const priceList = [
     {
       _id: 950,
       priceOne: 0.0,
-      priceTwo: 49.99,
+      priceTwo: 5.0,
     },
     {
       _id: 951,
-      priceOne: 50.0,
-      priceTwo: 99.99,
+      priceOne: 5.0,
+      priceTwo: 10.0,
     },
     {
       _id: 952,
-      priceOne: 100.0,
-      priceTwo: 199.99,
+      priceOne: 10.0,
+      priceTwo: 15.0,
     },
     {
       _id: 953,
-      priceOne: 200.0,
-      priceTwo: 399.99,
+      priceOne: 15.0,
+      priceTwo: 25.0,
     },
     {
       _id: 954,
@@ -34,6 +34,10 @@ const Price = () => {
       priceTwo: 1000.0,
     },
   ];
+
+  const handlePriceClick = (priceRange) => {
+    onPriceClick(priceRange);
+  };
   return (
     <div className="cursor-pointer">
       <NavTitle title="Shop by Price" icons={false} />
@@ -42,7 +46,8 @@ const Price = () => {
           {priceList.map((item) => (
             <li
               key={item._id}
-              className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center gap-2 hover:text-primeColor hover:border-gray-400 duration-300"
+              className="border-b-[1px] border-b-[#F0F0F0] pb-2 flex items-center gap-2 hover:text-primeColor hover:border-gray-400 duration-300 cursor-pointer"
+              onClick={() => handlePriceClick(item)}
             >
               ${item.priceOne.toFixed(2)} - ${item.priceTwo.toFixed(2)}
             </li>
