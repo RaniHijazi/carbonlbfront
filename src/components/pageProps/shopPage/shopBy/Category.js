@@ -10,7 +10,7 @@ const Category = ({ onCategoryClick }) => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(
-        "https://localhost:7025/api/Store/categories"
+        "http://localhost:7025/api/Store/categories"
       );
       setCategories(response.data);
     } catch (error) {
@@ -21,7 +21,7 @@ const Category = ({ onCategoryClick }) => {
   const fetchItemsByCategory = async (categoryName) => {
     try {
       const response = await axios.get(
-        `https://localhost:7025/api/Store/items/category/${categoryName}`
+        `http://localhost:7025/api/Store/items/category/${categoryName}`
       );
       console.log("Fetched items for category:", categoryName, response.data);
       onCategoryClick(response.data); // Pass data to Shop

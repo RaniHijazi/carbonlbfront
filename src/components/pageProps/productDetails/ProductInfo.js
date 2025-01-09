@@ -13,28 +13,23 @@ const ProductInfo = ({ productInfo }) => {
       <p className="font-medium text-lg">
         <span className="font-normal">Colors:</span> {productInfo.color}
       </p>
-      <button
-        onClick={() =>
-          dispatch(
-            addToCart({
-              _id: productInfo.id,
-              name: productInfo.productName,
-              quantity: 1,
-              image: productInfo.img,
-              badge: productInfo.badge,
-              price: productInfo.price,
-              colors: productInfo.color,
-            })
-          )
-        }
-        className="w-full py-4 bg-primeColor hover:bg-black duration-300 text-white text-lg font-titleFont"
-      >
-        Add to Cart
-      </button>
-      <p className="font-normal text-sm">
-        <span className="text-base font-medium"> Categories:</span> Spring
-        collection, Streetwear, Women Tags: featured SKU: N/A
-      </p>
+      <div className="mt-4">
+          <a
+            href={`https://wa.me/96171142459?text=Hello, I am interested in buying the following product:%0A%0AProduct Name: ${productInfo.name}%0APrice: $${productInfo.price}%0AColor: ${productInfo.color}%0AImage: ${productInfo.imageUrl}%0A%0AIs this product available?`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block w-full text-center bg-primeColor text-white py-2 rounded hover:bg-opacity-90 transition duration-300"
+          >
+            Buy on WhatsApp
+            <span>
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+                alt="WhatsApp"
+                className="inline-block w-4 h-4 ml-2"
+              />
+            </span>
+          </a>
+        </div>
     </div>
   );
 };

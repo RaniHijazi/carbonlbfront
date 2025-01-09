@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import Pagination from "../../components/pageProps/shopPage/Pagination";
 import ProductBanner from "../../components/pageProps/shopPage/ProductBanner";
-import ShopSideNav from "../../components/pageProps/shopPage/ShopSideNav";
 import axios from "axios";
 
 const Shop = () => {
@@ -14,7 +13,7 @@ const Shop = () => {
     const fetchAllItems = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:7025/api/Store/items"
+          "http://localhost:7025/api/Store/items"
         );
         setFilteredItems(response.data); // Display all items initially
       } catch (error) {
@@ -30,13 +29,13 @@ const Shop = () => {
       if (selectedCategory === "All Items" || selectedCategory === "") {
         // Fetch all items when "All Items" is selected or category is empty
         const response = await axios.get(
-          "https://localhost:7025/api/Store/items"
+          "http://localhost:7025/api/Store/items"
         );
         setFilteredItems(response.data); // Display all items
       } else {
         // Fetch items for the selected category
         const response = await axios.get(
-          `https://localhost:7025/api/Store/items/category/${selectedCategory}`
+          `http://localhost:7025/api/Store/items/category/${selectedCategory}`
         );
         setFilteredItems(response.data); // Display filtered items
       }
@@ -54,7 +53,7 @@ const Shop = () => {
       // Fetch and display all items when "All Items" is selected
       try {
         const response = await axios.get(
-          "https://localhost:7025/api/Store/items"
+          "http://localhost:7025/api/Store/items"
         );
         setFilteredItems(response.data); // Show all items
       } catch (error) {
@@ -64,36 +63,12 @@ const Shop = () => {
       // Fetch and display items for selected label
       try {
         const response = await axios.get(
-          `https://localhost:7025/api/Store/items/filter/label?label=${label}`
+          `http://localhost:7025/api/Store/items/filter/label?label=${label}`
         );
         setFilteredItems(response.data); // Show filtered items
       } catch (error) {
         console.error(`Error fetching items for label "${label}":`, error);
       }
-    }
-  };
-
-  // Handle color selection
-  const handleColorClick = async (color) => {
-    try {
-      const response = await axios.get(
-        `https://localhost:7025/api/Store/items/filter/color?color=${color}`
-      );
-      setFilteredItems(response.data); // Update items with filtered color
-    } catch (error) {
-      console.error("Error fetching items by color:", error);
-    }
-  };
-
-  // Handle price selection
-  const handlePriceClick = async (priceRange) => {
-    try {
-      const response = await axios.get(
-        `https://localhost:7025/api/Store/items/filter/price?minPrice=${priceRange.priceOne}&maxPrice=${priceRange.priceTwo}`
-      );
-      setFilteredItems(response.data); // Update items with filtered price range
-    } catch (error) {
-      console.error("Error fetching items by price:", error);
     }
   };
 
@@ -106,22 +81,16 @@ const Shop = () => {
     <div className="max-w-container mx-auto px-4">
       <Breadcrumbs title="Products" />
       {/* ================= Products Start here =================== */}
-      <div className="w-full h-full flex pb-20 gap-10">
-        <div className="w-[20%] lgl:w-[25%] hidden mdl:inline-flex h-full">
-          <ShopSideNav
-            onCategoryClick={handleCategoryClick}
-            onColorClick={handleColorClick}
-            onPriceClick={handlePriceClick}
-          />
-        </div>
-        <div className="w-full mdl:w-[80%] lgl:w-[75%] h-full flex flex-col gap-10">
+      <div className="w-full h-full pb-20">
+        <div className="w-full h-full flex flex-col gap-10">
           <ProductBanner
             itemsPerPageFromBanner={itemsPerPageFromBanner}
             onLabelClick={handleLabelClick}
             onCategoryClick={handleCategoryClick}
           />
-
-          <Pagination items={filteredItems} itemsPerPage={itemsPerPage} />
+          <div className="flex justify-center items-center">
+            <Pagination items={filteredItems} itemsPerPage={itemsPerPage} />
+          </div>
         </div>
       </div>
       {/* ================= Products End here ===================== */}

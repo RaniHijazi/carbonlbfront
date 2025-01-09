@@ -1,11 +1,11 @@
-import logo from "./orebiLogo.png";
-import logoLight from "./logoLight.png";
-import bannerImgOne from "./banner/bannerImgOne.webp";
-import bannerImgTwo from "./banner/bannerImgTwo.webp";
+import logo from "./logoLight.jpg";
+import logoLight from "./logoLight.jpg";
+import bannerImgOne from "./banner/bannerImgOne.jpg";
+import bannerImgTwo from "./banner/bannerImgTwo.jpg";
 import bannerImgThree from "./banner/bannerImgThree.webp";
-import saleImgOne from "./sale/saleImgOne.webp";
-import saleImgTwo from "./sale/saleImgTwo.webp";
-import saleImgThree from "./sale/saleImgThree.webp";
+import saleImgOne from "./sale/sale1.jpg";
+import saleImgTwo from "./sale/sale2.jpg";
+import saleImgThree from "./sale/sale3.jpg";
 // ============== Products Start here ====================
 // New Arrivals
 import newArrOne from "./products/newArrival/newArrOne.webp";

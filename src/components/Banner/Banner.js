@@ -112,11 +112,6 @@ const Banner = () => {
             <Image imgSrc={bannerImgTwo} />
           </div>
         </Link>
-        <Link to="/offer">
-          <div>
-            <Image imgSrc={bannerImgThree} />
-          </div>
-        </Link>
       </Slider>
     </div>
   );

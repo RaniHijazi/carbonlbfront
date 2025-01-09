@@ -15,7 +15,7 @@ const NewArrivals = () => {
     const fetchNewArrivals = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:7025/api/Store/new-arrivals"
+          "http://localhost:7025/api/Store/new-arrivals"
         );
         setProducts(response.data); // Update state with fetched data
         setLoading(false);
@@ -79,7 +79,7 @@ const NewArrivals = () => {
           <div key={product.id} className="px-2">
             <Product
               _id={product.id}
-              imageUrl={`https://localhost:7025${product.imageUrl}`}
+              imageUrl={`http://localhost:7025${product.imageUrl}`}
               name={product.name}
               price={product.price}
               color={product.color}

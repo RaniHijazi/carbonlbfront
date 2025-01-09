@@ -17,8 +17,7 @@ const YearProduct = () => {
             Product of The year
           </h1>
           <p className="text-base font-normal text-primeColor max-w-[600px] mr-4">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat
-            cupiditate modi amet! Facilis, aperiam quaerat.
+            Carbon_Lb have one of the quality carbon fiber accessories in Lebanon
           </p>
           <ShopNow />
         </div>

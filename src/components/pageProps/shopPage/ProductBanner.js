@@ -16,7 +16,7 @@ const ProductBanner = ({
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:7025/api/Store/categories"
+          "http://localhost:7025/api/Store/categories"
         );
         setCategories(response.data); // Store fetched categories
       } catch (error) {
@@ -52,7 +52,7 @@ const ProductBanner = ({
       <div className="flex items-center gap-6 mt-4 md:mt-0">
         {/* Sort by label */}
         <div className="flex items-center gap-2 text-base text-[#767676] relative">
-          <label className="block">Sort by:</label>
+          <label className="block">Sort:</label>
           <select
             id="labelSelect"
             value={selectedLabel} // Bind to selected label

@@ -1,7 +1,5 @@
 import React from "react";
 import axios from "axios";
-import Color from "./shopBy/Color";
-import Price from "./shopBy/Price";
 
 const ShopSideNav = ({ onCategoryClick, onColorClick, onPriceClick }) => {
   const [categories, setCategories] = React.useState([]);
@@ -10,7 +8,7 @@ const ShopSideNav = ({ onCategoryClick, onColorClick, onPriceClick }) => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "https://localhost:7025/api/Store/categories"
+          "http://localhost:7025/api/Store/categories"
         );
         setCategories(response.data);
       } catch (error) {
@@ -24,7 +22,7 @@ const ShopSideNav = ({ onCategoryClick, onColorClick, onPriceClick }) => {
   const handleCategoryClick = async (categoryName) => {
     try {
       const response = await axios.get(
-        `https://localhost:7025/api/Store/items/category/${categoryName}`
+        `http://localhost:7025/api/Store/items/category/${categoryName}`
       );
       onCategoryClick(response.data); // Pass the category items to parent
     } catch (error) {
@@ -35,16 +33,6 @@ const ShopSideNav = ({ onCategoryClick, onColorClick, onPriceClick }) => {
     }
   };
 
-  return (
-    <div className="w-full">
-      <div className="mt-6">
-        <Color onColorClick={onColorClick} />
-      </div>
-      <div className="mt-6">
-        <Price onPriceClick={onPriceClick} />
-      </div>
-    </div>
-  );
 };
 
 export default ShopSideNav;
