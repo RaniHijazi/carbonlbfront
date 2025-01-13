@@ -10,7 +10,7 @@ function Items({ currentItems }) {
           <div key={item.id} className="w-full">
             <Product
               _id={item.id}
-              imageUrl={`http://localhost:7025${item.imageUrl}`}
+              imageUrl={`${process.env.REACT_APP_BACKEND_BASE_URL}${item.imageUrl}`}
               name={item.name}
               price={item.price}
               color={item.color}

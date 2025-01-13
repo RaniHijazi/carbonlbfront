@@ -8,8 +8,9 @@ const ShopSideNav = ({ onCategoryClick, onColorClick, onPriceClick }) => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:7025/api/Store/categories"
+          `${process.env.REACT_APP_API_BASE_URL}/categories`
         );
+
         setCategories(response.data);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -22,8 +23,9 @@ const ShopSideNav = ({ onCategoryClick, onColorClick, onPriceClick }) => {
   const handleCategoryClick = async (categoryName) => {
     try {
       const response = await axios.get(
-        `http://localhost:7025/api/Store/items/category/${categoryName}`
+        `${process.env.REACT_APP_API_BASE_URL}/items/category/${categoryName}`
       );
+
       onCategoryClick(response.data); // Pass the category items to parent
     } catch (error) {
       console.error(
@@ -32,7 +34,6 @@ const ShopSideNav = ({ onCategoryClick, onColorClick, onPriceClick }) => {
       );
     }
   };
-
 };
 
 export default ShopSideNav;

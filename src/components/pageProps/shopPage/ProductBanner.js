@@ -16,8 +16,9 @@ const ProductBanner = ({
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:7025/api/Store/categories"
+          `${process.env.REACT_APP_API_BASE_URL}/categories`
         );
+
         setCategories(response.data); // Store fetched categories
       } catch (error) {
         console.error("Error fetching categories:", error);
