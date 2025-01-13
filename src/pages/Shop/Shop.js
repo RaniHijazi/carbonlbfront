@@ -13,7 +13,7 @@ const Shop = () => {
     const fetchAllItems = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:7025/api/Store/items"
+          `${process.env.REACT_APP_API_BASE_URL}/items`
         );
         setFilteredItems(response.data); // Display all items initially
       } catch (error) {
@@ -29,14 +29,15 @@ const Shop = () => {
       if (selectedCategory === "All Items" || selectedCategory === "") {
         // Fetch all items when "All Items" is selected or category is empty
         const response = await axios.get(
-          "http://localhost:7025/api/Store/items"
+          `${process.env.REACT_APP_API_BASE_URL}/items`
         );
         setFilteredItems(response.data); // Display all items
       } else {
         // Fetch items for the selected category
         const response = await axios.get(
-          `http://localhost:7025/api/Store/items/category/${selectedCategory}`
+          `${process.env.REACT_APP_API_BASE_URL}/items/category/${selectedCategory}`
         );
+
         setFilteredItems(response.data); // Display filtered items
       }
     } catch (error) {
@@ -53,8 +54,9 @@ const Shop = () => {
       // Fetch and display all items when "All Items" is selected
       try {
         const response = await axios.get(
-          "http://localhost:7025/api/Store/items"
+          `${process.env.REACT_APP_API_BASE_URL}/items`
         );
+
         setFilteredItems(response.data); // Show all items
       } catch (error) {
         console.error("Error fetching all items:", error);
@@ -63,8 +65,9 @@ const Shop = () => {
       // Fetch and display items for selected label
       try {
         const response = await axios.get(
-          `http://localhost:7025/api/Store/items/filter/label?label=${label}`
+          `${process.env.REACT_APP_API_BASE_URL}/items/filter/label?label=${label}`
         );
+
         setFilteredItems(response.data); // Show filtered items
       } catch (error) {
         console.error(`Error fetching items for label "${label}":`, error);

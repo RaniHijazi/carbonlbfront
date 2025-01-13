@@ -15,7 +15,7 @@ const NewArrivals = () => {
     const fetchNewArrivals = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:7025/api/Store/new-arrivals"
+          `${process.env.REACT_APP_API_BASE_URL}/new-arrivals`
         );
         setProducts(response.data); // Update state with fetched data
         setLoading(false);
@@ -79,7 +79,7 @@ const NewArrivals = () => {
           <div key={product.id} className="px-2">
             <Product
               _id={product.id}
-              imageUrl={`http://localhost:7025${product.imageUrl}`}
+              imageUrl={`${process.env.REACT_APP_BACKEND_BASE_URL}${product.imageUrl}`}
               name={product.name}
               price={product.price}
               color={product.color}

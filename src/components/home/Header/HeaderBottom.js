@@ -14,7 +14,7 @@ const HeaderBottom = () => {
   const fetchProducts = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:7025/api/Store/items"
+        `${process.env.REACT_APP_API_BASE_URL}/items`
       );
       setAllProducts(response.data);
     } catch (error) {
@@ -62,7 +62,7 @@ const HeaderBottom = () => {
                   onClick={() => {
                     const updatedItem = {
                       ...item,
-                      imageUrl: `http://localhost:7025${item.imageUrl}`,
+                      imageUrl: `${process.env.REACT_APP_BACKEND_BASE_URL}${item.imageUrl}`,
                     };
 
                     navigate(
@@ -81,7 +81,7 @@ const HeaderBottom = () => {
                 >
                   <img
                     className="w-24"
-                    src={`http://localhost:7025${item.imageUrl}`}
+                    src={`${process.env.REACT_APP_BACKEND_BASE_URL}${item.imageUrl}`}
                     alt={item.name}
                   />
                   <div className="flex flex-col gap-1">
