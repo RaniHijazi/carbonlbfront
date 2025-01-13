@@ -12,7 +12,7 @@ const SpecialOffers = () => {
     const fetchSpecialOffers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:7025/api/Store/special-offers"
+          `${process.env.REACT_APP_API_BASE_URL}/special-offers`
         );
         setProducts(response.data); // Update state with fetched data
         setLoading(false);
@@ -41,7 +41,7 @@ const SpecialOffers = () => {
           <Product
             key={product.id}
             _id={product.id}
-            imageUrl={`http://localhost:7025${product.imageUrl}`}
+            imageUrl={`${process.env.REACT_APP_BACKEND_BASE_URL}${product.imageUrl}`}
             name={product.name}
             price={product.price}
             color={product.color}
